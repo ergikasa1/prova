@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Restricted Access • Redirect Link</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #0A0C10;
+      font-family: system-ui, -apple-system, 'Segoe UI', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: #EFF1F4;
+    }
+
+    /* main card container */
+    .restrict-card {
+      max-width: 480px;
+      width: 100%;
+      margin: 24px auto;
+      background: #111317;
+      border-radius: 44px;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      backdrop-filter: blur(0px);
+      transition: all 0.2s ease;
+    }
+
+    /* top yellow bar + restricted header */
+    .warning-bar {
+      background: #F5B042;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .warning-label {
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.3px;
+      color: #0A0C10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .warning-label span {
+      background: rgba(0,0,0,0.2);
+      border-radius: 40px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #0A0C10;
+    }
+
+    .hint-icon {
+      font-size: 1rem;
+      font-weight: 500;
+      background: rgba(0,0,0,0.15);
+      padding: 4px 12px;
+      border-radius: 40px;
+      color: #1e1a0c;
+      font-family: monospace;
+    }
+
+    /* content area */
+    .content {
+      padding: 28px 24px 36px;
+    }
+
+    /* detection pill */
+    .detection-pill {
+      background: rgba(255, 75, 75, 0.12);
+      border: 1px solid rgba(255, 85, 85, 0.25);
+      border-radius: 100px;
+      padding: 10px 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      margin-bottom: 28px;
+      backdrop-filter: blur(4px);
+    }
+
+    .detection-pill .dot {
+      width: 10px;
+      height: 10px;
+      background: #FF5A5F;
+      border-radius: 10px;
+      box-shadow: 0 0 6px #ff5a5f;
+    }
+
+    /* instruction card */
+    .instruction-card {
+      background: #1A1D24;
+      border-radius: 32px;
+      padding: 24px;
+      margin: 24px 0 28px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .instruction-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      background: linear-gradient(135deg, #FFFFFF 0%, #C0C4D0 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .instruction-desc {
+      color: #9CA3AF;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      margin-bottom: 28px;
+      border-left: 3px solid #F5B042;
+      padding-left: 14px;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .step-number {
+      background: #2A2F3A;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #F5B042;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .step-text {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #EFF1F4;
+      flex: 1;
+    }
+
+    .step-text strong {
+      font-weight: 700;
+      background: #2C2F36;
+      padding: 3px 8px;
+      border-radius: 40px;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+
+    /* buttons area */
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 12px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: #F5B042;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #0A0C10;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(245,176,66,0.2);
+      flex: 1;
+      justify-content: center;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+      background: #E09E2C;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #3A3F4A;
+      padding: 14px 24px;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #B0B7C5;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 0.8;
+      justify-content: center;
+    }
+
+    .btn-secondary:active {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .small-note {
+      margin-top: 26px;
+      font-size: 0.7rem;
+      text-align: center;
+      color: #5E6572;
+      border-top: 0.5px solid rgba(255,255,255,0.05);
+      padding-top: 20px;
+    }
+
+    /* fallback for normal redirection (hidden hint but not visible) */
+    .hidden-redirect-note {
+      display: none;
+    }
+
+    /* responsive compact */
+    @media (max-width: 480px) {
+      .restrict-card {
+        border-radius: 36px;
+      }
+      .content {
+        padding: 20px 18px 32px;
+      }
+      .instruction-card {
+        padding: 20px;
+      }
+      .step-text {
+        font-size: 0.9rem;
+      }
+      .btn-primary, .btn-secondary {
+        padding: 12px 20px;
+      }
+      .warning-label {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* subtle animations */
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(12px);}
+      100% { opacity: 1; transform: translateY(0);}
+    }
+    .restrict-card {
+      animation: fadeSlideUp 0.4s ease-out;
+    }
+
+    /* make tap target comfy */
+    button {
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    a, .copy-link {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="restrict-card" id="appRoot">
+  <div class="warning-bar">
+    <div class="warning-label">
+      ⚠️ Restricted
+      <span>Tap ••• here</span>
+    </div>
+    <div class="hint-icon">
+      ⋯
+    </div>
+  </div>
+  <div class="content">
+    <div class="detection-pill" id="browserDetectionBadge">
+      <span class="dot"></span>
+      <span id="detectionText">Detecting environment...</span>
+    </div>
+
+    <div class="instruction-card">
+      <div class="instruction-title">Unlock full access:</div>
+      <div class="instruction-desc">
+        This app restricts content. Follow steps below — <strong>New</strong>
+      </div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-text">Tap the <strong>⋯</strong> icon in the top right corner</div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-text">Select <strong>“Open in Browser”</strong> from the menu</div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-text">Get the full experience instantly</div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-primary" id="visualOpenBtn">
+          🌐 Open in browser
+        </button>
+        <button class="btn-secondary" id="copyLinkBtn">
+          📋 Copy link instead
+        </button>
+      </div>
+      <div class="small-note">
+        Browser history • Browser settings
+      </div>
+    </div>
+    <div class="small-note" style="margin-top: 8px;">
+      Can't find it? <span id="copySecondaryTrigger" style="color:#F5B042; font-weight:500; cursor:pointer;">Copy link</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ========================
+    // TARGET URL (not exposed in HTML, only in JS)
+    // ========================
+    const TARGET_URL = "https://linktr.ee/alisskussie";
+
+    // ---------- In-App Browser Detection (User Agent + known headers) ----------
+    function detectInAppBrowser() {
+      const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+      const lowerUA = ua.toLowerCase();
+
+      // Snapchat detection: "Snapchat" in UA
+      const isSnapchat = /Snapchat/i.test(ua);
+      // Instagram detection: "Instagram" in UA
+      const isInstagram = /Instagram/i.test(ua);
+      // Facebook detection: FBAN / FBAV / FBSV / "FB_iab" or "FBAN"
+      const isFacebook = /FBAN|FBAV|FBSV|FB_IAB|FBBROWSER/i.test(ua);
+      // Additional common in-app: "Line", "Twitter" (but the spec requires snap/insta/fb)
+      // Also detect "Messenger", but primary is FBAN coverage.
+      // Also extra check for "wv" (WebView) which is typical for many in-app browsers, but we follow spec.
+      // Better safe detection: check any of required matches.
+      
+      // Also some apps like TikTok, but main spec: Snapchat, Instagram, FBAN/FBAV.
+      // Some modern IG detection also appears as "Instagram" already covers.
+      const isKnownInApp = isSnapchat || isInstagram || isFacebook;
+      
+      // Additional fallback: check if it's a WebView without being a full Safari/Chrome (optional but robust)
+      // WKWebView / Android WebView sometimes missed. But spec wants only those three major.
+      // However to be fully accurate for 'in-app browser' we can also detect 'wv' but keep as requirement.
+      // For strict matching, we focus on snap/insta/fb.
+      if (isKnownInApp) return true;
+      
+      // For sake of completeness: some older FB wrappers might contain 'FB' in ua, but done.
+      // Extra edge: if the userAgent contains "FBAV" we already captured.
+      return false;
+    }
+
+    // get precise browser display string for UI (Snapchat, Instagram, Facebook or generic "In-App Browser")
+    function getInAppDisplayName() {
+      const ua = navigator.userAgent;
+      if (/Snapchat/i.test(ua)) return "Snapchat Browser";
+      if (/Instagram/i.test(ua)) return "Instagram Browser";
+      if (/FBAN|FBAV|FBSV|FB_IAB/i.test(ua)) return "Facebook In-App Browser";
+      // fallback for any detected in-app but specific unknown
+      const isInAppDetected = detectInAppBrowser();
+      if (isInAppDetected) return "In-App Browser";
+      return null;
+    }
+
+    // update detection pill text
+    function updateDetectionUI() {
+      const detectionSpan = document.getElementById('detectionText');
+      if (!detectionSpan) return;
+      const isInApp = detectInAppBrowser();
+      if (isInApp) {
+        const displayName = getInAppDisplayName();
+        detectionSpan.innerText = `Detected: ${displayName || "Restricted Browser"}`;
+      } else {
+        detectionSpan.innerText = `Detected: External Browser → Redirecting`;
+      }
+    }
+
+    // handle copy link functionality
+    async function copyLinkToClipboard() {
+      try {
+        await navigator.clipboard.writeText(TARGET_URL);
+        // Provide micro feedback (toast-style but unobtrusive)
+        showToastFeedback("✓ Link copied to clipboard!");
+      } catch (err) {
+        // fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = TARGET_URL;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToastFeedback("✓ Link copied (manual)");
+      }
+    }
+
+    // simple toast feedback (not mandatory but elegant)
+    function showToastFeedback(msg) {
+      let toast = document.querySelector('.custom-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'custom-toast';
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = '#1F2937';
+        toast.style.backdropFilter = 'blur(12px)';
+        toast.style.padding = '12px 20px';
+        toast.style.borderRadius = '60px';
+        toast.style.fontSize = '0.85rem';
+        toast.style.fontWeight = '500';
+        toast.style.color = '#F5B042';
+        toast.style.border = '1px solid rgba(245,176,66,0.3)';
+        toast.style.zIndex = '2000';
+        toast.style.boxShadow = '0 8px 20px rgba(0,0,0,0.3)';
+        toast.style.whiteSpace = 'nowrap';
+        toast.style.fontFamily = 'system-ui, sans-serif';
+        document.body.appendChild(toast);
+      }
+      toast.innerText = msg;
+      toast.style.opacity = '1';
+      toast.style.transition = 'opacity 0.2s';
+      clearTimeout(window.toastTimeout);
+      window.toastTimeout = setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          if (toast.parentNode) toast.remove();
+        }, 300);
+      }, 1800);
+    }
+
+    // Redirect logic: if external browser => redirect after small delay.
+    function handleRedirectLogic() {
+      const isInApp = detectInAppBrowser();
+      if (!isInApp) {
+        // Normal browser: redirect to target URL after delay (200-300ms)
+        // small delay for consistent detection and to avoid race conditions,
+        // also ensures smooth reading for non-inapp
+        setTimeout(() => {
+          window.location.href = TARGET_URL;
+        }, 260); // bonus delay (ms)
+        return true; // redirect will happen
+      } else {
+        // in-app browser detected: stay on page, show UI (already shown)
+        // No redirect.
+        return false;
+      }
+    }
+
+    // UI enhancement: adjust for in-app vs non (just styling consistency)
+    function customizeUIForInApp() {
+      const isInApp = detectInAppBrowser();
+      const detectionPill = document.querySelector('.detection-pill');
+      const primaryBtn = document.getElementById('visualOpenBtn');
+      const copyBtn = document.getElementById('copyLinkBtn');
+      
+      if (!isInApp) {
+        // For normal browser we still show full instruction but maybe with a short redirection indicator.
+        // However the redirect will happen after small delay, we want to show a subtle info?
+        // The spec says: if normal browser instantly redirect. But we already implement redirect.
+        // But to avoid flicker, we can keep UI but redirect is imminent, user might not see much.
+        // However sometimes due to delay the user sees the page for a split second — harmless.
+        // But we can set a small friendly note on detection badge: "Redirecting..."
+        const detectionSpan = document.getElementById('detectionText');
+        if (detectionSpan && !isInApp) {
+          detectionSpan.innerText = "Detected: Chrome / Safari → Redirecting...";
+        }
+        // Optional: Disable buttons or show indicator, but not required.
+        // We also add a passive message that redirect soon but no confusion. Buttons may still work.
+        // Buttons for copy still functional and "open in browser" is instructional, not forced.
+        // But target redirect will happen from external, okay.
+      } else {
+        // In-app view: fully interactive, ensure instruction UI is visible.
+        if (detectionPill) {
+          const detectionSpan = document.getElementById('detectionText');
+          if (detectionSpan) {
+            const name = getInAppDisplayName();
+            detectionSpan.innerText = `Detected: ${name || "In-App Browser"}`;
+          }
+        }
+      }
+    }
+
+    // Attach event listeners to copy & visual open (visual open will just try to open link in external)
+    // For "open in browser" button (visual guidance) -> it copies link or suggests user to follow steps.
+    // However the requirement says: primary button: “Open in browser” (just visual guidance, not forced action).
+    // But we can politely try to open the URL with a system prompt? but to not break expectation we show a helper:
+    // If in-app and user clicks “Open in Browser” we can attempt to invoke the native open with target=_blank? maybe ineffective, so we show copy fallback.
+    // To match the instructions, clicking "open in browser" could copy link and show an extra toast.
+    // For polished user experience, we can copy link to clipboard or provide helpful message: "Follow steps above or copy link"
+    // But that respects visual guidance.
+    function initButtons() {
+      const openBtn = document.getElementById('visualOpenBtn');
+      const copyBtn = document.getElementById('copyLinkBtn');
+      const secondaryCopyTrigger = document.getElementById('copySecondaryTrigger');
+      
+      if (openBtn) {
+        openBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          // Since we are inside an in-app browser (or even external but then UI would disappear anyway)
+          // Provide a helpful message. However we copy link and also show how to open.
+          const isInApp = detectInAppBrowser();
+          if (isInApp) {
+            copyLinkToClipboard().then(() => {
+              showToastFeedback("🔗 Link copied! Now open in your external browser.");
+            }).catch(()=>{});
+          } else {
+            // if normal browser but user hasn't been redirected yet (very rare due to delay), just redirect manually
+            window.location.href = TARGET_URL;
+          }
+        });
+      }
+      
+      if (copyBtn) {
+        copyBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          copyLinkToClipboard();
+        });
+      }
+      
+      if (secondaryCopyTrigger) {
+        secondaryCopyTrigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          copyLinkToClipboard();
+        });
+      }
+    }
+    
+    // Additional edge: some browsers might block automatic redirection? fine.
+    // The redirect process may be called before full DOM but we wait until after detection.
+    // We need to ensure: for normal browsers, redirect should not be prevented by UI rendering.
+    // Order: detect as early as possible. We'll run detection before full DOM interactive, but ensure after load.
+    // However we need to redirect immediately but also with small delay.
+    
+    // Solution: window.addEventListener('load') or DOMContentLoaded? Earlier is better.
+    // We execute immediate detection after script load:
+    (function earlyRedirectCheck() {
+      const isInApp = detectInAppBrowser();
+      if (!isInApp) {
+        // redirect using timer, but use small delay to avoid conflict and ensure any event loops are okay.
+        setTimeout(() => {
+          // double-check just before redirect (prevent if somehow changed, but stable)
+          if (!detectInAppBrowser()) {
+            window.location.replace(TARGET_URL);
+          }
+        }, 250);
+      }
+    })();
+
+    // UI updates that must wait for DOM content
+    document.addEventListener('DOMContentLoaded', () => {
+      updateDetectionUI();
+      customizeUIForInApp();
+      initButtons();
+      
+      // Additional: for in-app browsers, we ensure that if something tries to navigate? not needed
+      // Also maybe add helper: enable manual copy without redirect
+      const isInAppFinal = detectInAppBrowser();
+      if (!isInAppFinal) {
+        // just in case the page persists (e.g., due to delay) we still ensure redirect but double-check
+        // the redirect is already set in earlyRedirectCheck, but safety net:
+        if (window.location.href.indexOf('about:blank') === -1) {
+          // ensure that if after 500ms not redirected due to some race, redirect again
+          setTimeout(() => {
+            if (!detectInAppBrowser() && window.location.href.indexOf(TARGET_URL) === -1) {
+              window.location.href = TARGET_URL;
+            }
+          }, 600);
+        }
+      } else {
+        // Additional enhancement: if Snapchat detects and we show UI, the detection badge gets exact name.
+        const finalDisplayName = getInAppDisplayName();
+        const detectSpan = document.getElementById('detectionText');
+        if (detectSpan && finalDisplayName) {
+          detectSpan.innerText = `Detected: ${finalDisplayName}`;
+        }
+      }
+      
+      // for a modern touch, if user is in external browser and by any chance redirect not triggered (because maybe dev tools)
+      // but it will.
+    });
+    
+    // ensure if page loaded via back navigation etc, still safe
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        const isInApp = detectInAppBrowser();
+        if (!isInApp) {
+          setTimeout(() => {
+            if (!detectInAppBrowser()) window.location.href = TARGET_URL;
+          }, 200);
+        }
+      }
+    });
+    
+  })();
+</script>
+</body>
+</html>
